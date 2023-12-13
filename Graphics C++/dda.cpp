@@ -3,7 +3,16 @@
 #include <cmath> // Include <cmath> for abs() function
 using namespace std;
 
-void ddaline(int x1, int y1, int x2, int y2, int col)
+int sign(int t)
+{
+    if (t > 0)
+        return 1;
+    else if (t == 0)
+        return 0;
+    else
+        return -1;
+}
+void ddaline(int x1, int y1, int x2, int y2, int col = 1)
 {
     int x, y, len, i;
     float dx, dy;
@@ -27,20 +36,20 @@ void ddaline(int x1, int y1, int x2, int y2, int col)
 
         dx = (x2 - x1) / len;
         dy = (y2 - y1) / len;
-        x = x + 0.5 * (dx);
-        y = y + 0.5 * (dy);
+        x = x + 0.5 * sign(dx);
+        y = y + 0.5 * sign(dy);
         i = 1;
         while (i < len)
         {
             putpixel(x, y, col);
-            x = x + dx;
+            x = x + (dx);
             y = y + dy;
             i++;
         }
     }
 }
 
-void bbline(int x1, int y1, int x2, int y2, int col)
+void bbline(int x1, int y1, int x2, int y2, int col = 1)
 {
     int dx, dy, e, x, y, i = 1;
     dx = x2 - x1;
@@ -63,46 +72,50 @@ void bbline(int x1, int y1, int x2, int y2, int col)
         i++;
     }
 }
+void drawcircle(int xc, int yc, int r)
+{
+    long d, x, y;
+    x = 0;
+    y = r;
+    d = 3 - 2 * r;
+
+    while (x <= y)
+    {
+        putpixel(xc + x, yc + y, 9);
+        putpixel(xc - x, yc + y, 9);
+        putpixel(xc + x, yc - y, 9);
+        putpixel(xc - x, yc - y, 9);
+        putpixel(xc + y, yc + x, 9);
+        putpixel(xc - y, yc + x, 9);
+        putpixel(xc + y, yc - x, 9);
+        putpixel(xc - y, yc - x, 9);
+        if (d < 0)
+            d = d + 4 * x + 6;
+        else
+        {
+            d = d + 4 * (x - y) + 10;
+            y--;
+        }
+        x++;
+    }
+}
+
 int main()
 {
-    int ch, col, x1, x2, y1, y2;
-    cout << "\n------------MENU------------\n";
-    cout << "1.USING DDA\n";
-    cout << "2.Using Bresahnams\n";
-    cout << "\nEnter your choice : \n";
-    cin >> ch;
-    cout << "\nEnter points x1,y1,x2,y2 : \n";
-    cin >> x1 >> y1 >> x2 >> y2;
-    cout << "\nEnter colour 1-15 : \n";
-    cin >> col;
-
-    if (col > 15 || col < 1)
-        col = 1;
-
     int gd = DETECT, gm;
     initgraph(&gd, &gm, NULL);
+    ddaline(0, 0, 300, 0);
+    ddaline(0, 0, 0, 200);
+    ddaline(0, 200, 300, 200);
+    ddaline(300, 0, 300, 200);
 
-    switch (ch)
-    {
-    case 1:
-        ddaline(x1, y1, x2, y2, col);
-        ddaline(300, 300, 400, 300, col);
-        ddaline(300, 300, 300, 400, col);
-        ddaline(300, 400, 400, 400, col);
-        ddaline(400, 400, 400, 300, col);
-        break;
-    case 2:
-        bbline(x1, y1, x2, y2, col);
-        ddaline(300, 300, 400, 300, col);
-        ddaline(300, 300, 300, 400, col);
-        ddaline(300, 400, 400, 400, col);
-        ddaline(400, 400, 400, 300, col);
-        break;
-    default:
-        cout << "\nEnter valid choice :\n";
-    }
+    ddaline(150, 0, 0, 100);
+    ddaline(0, 100, 150, 200);
+    ddaline(150, 200, 300, 100);
+    ddaline(150, 0, 300, 100);
 
-    getch();
+    drawcircle(150, 100, 84);
+    delay(10000);
     closegraph();
     return 0;
 }
